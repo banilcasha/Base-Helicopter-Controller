@@ -6,8 +6,6 @@ public class HelicopterController : MonoBehaviour
     public AudioSource HelicopterSound;
     public ControlPanel ControlPanel;
     public Rigidbody HelicopterModel;
-    public HeliRotorController MainRotorController;
-    public HeliRotorController SubRotorController;
 
     public float TurnForce = 3f;
     public float ForwardForce = 10f;
@@ -18,14 +16,13 @@ public class HelicopterController : MonoBehaviour
     public float turnTiltForcePercent = 1.5f;
     public float turnForcePercent = 1.3f;
 
+    [SerializeField]
     private float _engineForce;
     public float EngineForce
     {
         get { return _engineForce; }
         set
         {
-            MainRotorController.RotarSpeed = value * 80;
-            SubRotorController.RotarSpeed = value * 40;
             HelicopterSound.pitch = Mathf.Clamp(value / 40, 0, 1.2f);
             if (UIGameController.runtime.EngineForceView != null)
                 UIGameController.runtime.EngineForceView.text = string.Format("Engine value [ {0} ] ", (int)value);
@@ -34,10 +31,11 @@ public class HelicopterController : MonoBehaviour
         }
     }
 
-    private Vector2 hMove = Vector2.zero;
+    public Vector2 hMove = Vector2.zero;
     private Vector2 hTilt = Vector2.zero;
     private float hTurn = 0f;
     public bool IsOnGround = true;
+    public bool IsKeyInput = false;
 
     // Use this for initialization
 	void Start ()
@@ -52,7 +50,7 @@ public class HelicopterController : MonoBehaviour
     {
         LiftProcess();
         MoveProcess();
-        TiltProcess();
+        //TiltProcess();
     }
 
     private void MoveProcess()
@@ -79,6 +77,8 @@ public class HelicopterController : MonoBehaviour
 
     private void OnKeyPressed(PressedKeyCode[] obj)
     {
+        if (!IsKeyInput) return;
+
         float tempY = 0;
         float tempX = 0;
 
@@ -102,51 +102,50 @@ public class HelicopterController : MonoBehaviour
             switch (pressedKeyCode)
             {
                 case PressedKeyCode.SpeedUpPressed:
-
                     EngineForce += 0.1f;
                     break;
-                case PressedKeyCode.SpeedDownPressed:
 
+                case PressedKeyCode.SpeedDownPressed:
                     EngineForce -= 0.12f;
                     if (EngineForce < 0) EngineForce = 0;
                     break;
 
-                    case PressedKeyCode.ForwardPressed:
-
+                case PressedKeyCode.ForwardPressed:
                     if (IsOnGround) break;
                     tempY = Time.fixedDeltaTime;
                     break;
-                    case PressedKeyCode.BackPressed:
 
+                case PressedKeyCode.BackPressed:
                     if (IsOnGround) break;
                     tempY = -Time.fixedDeltaTime;
                     break;
-                    case PressedKeyCode.LeftPressed:
 
+                case PressedKeyCode.LeftPressed:
                     if (IsOnGround) break;
                     tempX = -Time.fixedDeltaTime;
                     break;
-                    case PressedKeyCode.RightPressed:
 
+                case PressedKeyCode.RightPressed:
                     if (IsOnGround) break;
                     tempX = Time.fixedDeltaTime;
                     break;
-                    case PressedKeyCode.TurnRightPressed:
+
+                case PressedKeyCode.TurnRightPressed:
                     {
                         if (IsOnGround) break;
-                        var force = (turnForcePercent - Mathf.Abs(hMove.y))*HelicopterModel.mass;
-                        HelicopterModel.AddRelativeTorque(0f, force, 0);
-                    }
-                    break;
-                    case PressedKeyCode.TurnLeftPressed:
-                    {
-                        if (IsOnGround) break;
-                        
-                        var force = -(turnForcePercent - Mathf.Abs(hMove.y))*HelicopterModel.mass;
+                        var force = (turnForcePercent - Mathf.Abs(hMove.y)) * HelicopterModel.mass;
                         HelicopterModel.AddRelativeTorque(0f, force, 0);
                     }
                     break;
 
+                case PressedKeyCode.TurnLeftPressed:
+                    {
+                        if (IsOnGround) break;
+
+                        var force = -(turnForcePercent - Mathf.Abs(hMove.y)) * HelicopterModel.mass;
+                        HelicopterModel.AddRelativeTorque(0f, force, 0);
+                    }
+                    break;
             }
         }
 

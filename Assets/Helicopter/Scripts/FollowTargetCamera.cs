@@ -11,7 +11,9 @@ public class FollowTargetCamera : MonoBehaviour
 	}
 
     void FixedUpdate()
-	{
+    {
+        if (Target == null) return;
+
         var vector = Vector3.forward;
         var dir = Target.rotation * Vector3.forward;
 		dir.y = 0f;

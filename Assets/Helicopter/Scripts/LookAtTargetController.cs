@@ -7,8 +7,13 @@ public class LookAtTargetController : MonoBehaviour
     public bool smooth = true;
     public float damping = 6.0f;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        Debug.Log(gameObject.name);
+    }
+
+    // Use this for initialization
+    void Start () {
 	
 	}
 	

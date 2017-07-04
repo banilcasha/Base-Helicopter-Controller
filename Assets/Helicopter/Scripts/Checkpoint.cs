@@ -5,9 +5,15 @@ using System.Collections;
 public class Checkpoint : MonoBehaviour
 {
 
-    public Action CheckpointActivated; 
-	// Use this for initialization
-	void Start () {
+    public Action CheckpointActivated;
+
+    private void Awake()
+    {
+        Debug.Log(gameObject.name);
+    }
+
+    // Use this for initialization
+    void Start () {
 	
 	}
 	

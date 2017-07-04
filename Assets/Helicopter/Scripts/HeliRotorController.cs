@@ -4,7 +4,12 @@ using UnityEngine;
 //rename
 public class HeliRotorController : MonoBehaviour
 {
-	public enum Axis
+    public void Awake()
+    {
+        Debug.Log(gameObject.name);
+    }
+
+    public enum Axis
 	{
 		X,
 		Y,

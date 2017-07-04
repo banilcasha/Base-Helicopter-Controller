@@ -11,8 +11,12 @@ public class CheckpointController : MonoBehaviour
     private Checkpoint CurrentCheckpoint;
     private int CheckpointId;
 
-	// Use this for initialization
-	void Start ()
+    private void Awake()
+    {
+        Debug.Log(gameObject.name);
+    }
+    // Use this for initialization
+    void Start ()
 	{
         if (CheckpointsList.Length==0) return;
 
@@ -43,9 +47,10 @@ public class CheckpointController : MonoBehaviour
         if (CheckpointId >= CheckpointsList.Length)
         {
             CurrentCheckpoint.gameObject.SetActive(false);
-            CurrentCheckpoint.CheckpointActivated -= CheckpointActivated;
-            Arrow.gameObject.SetActive(false);
-            return;
+            //CurrentCheckpoint.CheckpointActivated -= CheckpointActivated;
+            //Arrow.gameObject.SetActive(false);
+            CheckpointId = 0;
+            //return;
         }
 
         SetCurrentCheckpoint(CheckpointsList[CheckpointId]);
